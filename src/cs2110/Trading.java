@@ -29,9 +29,22 @@ public class Trading {
      * prices.length-1`.
      */
     static int argmaxTail(int[] prices, int i) {
-        // TODO 2: Implement this method according to its specifications. Use a `while` loop
-        //  documented with the invariant you visualized in part 1.
-        throw new UnsupportedOperationException();
+        //defensive programming
+        assert prices != null;
+        assert i>=0 && i<prices.length-1;
+
+
+        /*
+        Loop invariant:
+        max = index of max value in the range [i,k)
+         */
+        int max = i;
+        for (int k = i+1; k<prices.length;k++){
+            if(prices[k]>prices[max]){
+                max = k;
+            }
+        }
+        return max;
     }
 
     /**
