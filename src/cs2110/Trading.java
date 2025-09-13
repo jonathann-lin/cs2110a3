@@ -29,9 +29,20 @@ public class Trading {
      * prices.length-1`.
      */
     static int argmaxTail(int[] prices, int i) {
-        // TODO 2: Implement this method according to its specifications. Use a `while` loop
-        //  documented with the invariant you visualized in part 1.
-        throw new UnsupportedOperationException();
+        //defensive programming
+        assert prices != null;
+        assert i >= 0 && i < prices.length - 1;
+        /*
+        Loop invariant:
+        max = index of max value in the range [i+1,k)
+         */
+        int max = i+1;
+        for (int k = i + 2; k < prices.length; k++) {
+            if (prices[k] > prices[max]) {
+                max = k;
+            }
+        }
+        return max;
     }
 
     /**
@@ -39,20 +50,23 @@ public class Trading {
      * window.
      */
     static BuySellTransaction optimalTransaction1(int[] prices) {
-        // TODO 3: Implement this method according to its specifications. Uncomment and fill in the
-        //  definition of this `while` loop so that it has the given loop invariant. The body of
-        //  this loop should call `argMaxTail()` in each iteration.
-        BuySellTransaction opt;
+
+        BuySellTransaction opt = new BuySellTransaction(0, 1);
 
         /*
          * Loop invariant: opt references a `Transaction` among all those with `purchaseTime` in
          * `[0..i)` with the maximum achievable profit.
          */
-        // while () {
-        //
-        // }
+        int i = 0;
+        while (i < prices.length - 1) {
+            BuySellTransaction comparison = new BuySellTransaction(i, argmaxTail(prices, i));
+            if (profit(prices, comparison) > profit(prices, opt)) {
+                opt = comparison;
+            }
+            i++;
+        }
 
-        throw new UnsupportedOperationException();
+        return opt;
     }
 
     /**
