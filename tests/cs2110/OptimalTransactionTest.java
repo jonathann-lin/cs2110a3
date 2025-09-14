@@ -63,6 +63,103 @@ public abstract class OptimalTransactionTest {
         assertOptimalTransaction(prices, optimalTransaction(prices));
     }
 
+    @DisplayName("WHEN there are only two increasing prices, THEN buy at the first and sell at the second.")
+    @Test
+    void testTwoIncreasing() {
+        int[] prices = {1, 5};
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN there are only two decreasing prices, THEN the transaction is the two consecutive times with the smallest decrease.")
+    @Test
+    void testTwoDecreasing() {
+        int[] prices = {5, 1};
+        // Expect (0,1). Depending on spec, profit = -4 (or 0 if disallowing losses).
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN prices are strictly increasing, THEN the optimal transaction is to buy at the first time and sell at the last time.")
+    @Test
+    void testStrictlyIncreasing() {
+        int[] prices = {1, 2, 3, 4, 5};
+        assertEquals(new BuySellTransaction(0, 4), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN prices are strictly decreasing, THEN the optimal transaction is the smallest decrease between consecutive days.")
+    @Test
+    void testStrictlyDecreasing() {
+        int[] prices = {9, 7, 5, 3, 1};
+        // Smallest drop is -2 between 0 and 1
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN all prices are the same, THEN the optimal transaction is the first two days with zero profit.")
+    @Test
+    void testAllEqual() {
+        int[] prices = {5, 5, 5, 5};
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN there is a valley followed by a peak, THEN the optimal transaction is to buy at the valley and sell at the peak.")
+    @Test
+    void testValleyThenPeak() {
+        int[] prices = {7, 1, 5, 3, 6, 4};
+        assertEquals(new BuySellTransaction(1, 4), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN the lowest price appears late, THEN the optimal transaction is to buy late and sell at the final peak.")
+    @Test
+    void testLateValley() {
+        int[] prices = {8, 9, 2, 5, 1, 7};
+        assertEquals(new BuySellTransaction(4, 5), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN there are multiple valleys, THEN the optimal transaction uses the later, lower valley if it yields more profit.")
+    @Test
+    void testMultipleValleys() {
+        int[] prices = {10, 2, 6, 1, 7};
+        assertEquals(new BuySellTransaction(3, 4), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN there are multiple equally optimal transactions, THEN the first one encountered is returned.")
+    @Test
+    void testMultipleOptimalTransactions() {
+        int[] prices = {2, 6, 1, 5};
+        // Both (0,1) and (2,3) yield profit = 4, algorithm picks the first.
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN prices are strictly increasing with large input, THEN the optimal transaction is still first to last.")
+    @Test
+    void testLargeIncreasing() {
+        int[] prices = new int[10000];
+        for (int i = 0; i < prices.length; i++) {
+            prices[i] = i;
+        }
+        assertEquals(new BuySellTransaction(0, 9999), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN the maximum profit is zero, THEN the returned transaction yields zero.")
+    @Test
+    void testZeroProfit() {
+        int[] prices = {3, 3, 2, 2};
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN the optimal buy/sell are in the middle, THEN the transaction is chosen correctly.")
+    @Test
+    void testMiddleOptimal() {
+        int[] prices = {9, 8, 1, 6, 2};
+        assertEquals(new BuySellTransaction(2, 3), optimalTransaction(prices));
+    }
+
+    @DisplayName("WHEN the first two days yield the best profit, THEN that transaction is returned.")
+    @Test
+    void testFirstTwoDaysOptimal() {
+        int[] prices = {1, 10, 9, 8};
+        assertEquals(new BuySellTransaction(0, 1), optimalTransaction(prices));
+    }
+
     // These tests do *not* completely cover the `optimalTransaction#()` methods. You're encouraged
     // to do add further tests to verify the correctness of your solution. You are not required to
     // submit the tests that you write.

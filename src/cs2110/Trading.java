@@ -36,7 +36,7 @@ public class Trading {
         Loop invariant:
         max = index of max value in the range [i+1,k)
          */
-        int max = i+1;
+        int max = i + 1;
         for (int k = i + 2; k < prices.length; k++) {
             if (prices[k] > prices[max]) {
                 max = k;
@@ -79,7 +79,23 @@ public class Trading {
         //  with the maximum achievable profit. Be sure to document the invariants of any loop(s)
         //  you write. Your implementation should have worst-case runtime complexity O(N), where
         //  N=prices.length, and worst-case space complexity O(1).
-        throw new UnsupportedOperationException();
+
+        BuySellTransaction best = new BuySellTransaction(0, 1);
+        int minPrice = 0; //records index of lowest price seen so far
+        //TODO do loop invariant
+        for (int i = 1; i < prices.length; i++) {
+            BuySellTransaction test = new BuySellTransaction(minPrice, i);
+            if (profit(prices, test) > profit(prices, best)) {
+                best = test; //update best to be the current transaction being checked
+            }
+
+            //Updates minPrice if current price is lowest
+            if (prices[i] < prices[minPrice]) {
+                minPrice = i;
+            }
+        }
+        return best;
+
     }
 
 }
