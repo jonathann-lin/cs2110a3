@@ -74,11 +74,6 @@ public class Trading {
      * window.
      */
     static BuySellTransaction optimalTransaction2(int[] prices) {
-        // TODO 5: Implement this method according to its specifications. For each time `i` in
-        //  `[1..prices.length-1]`, you should compute the `BuySellTransaction` with `sellTime == i`
-        //  with the maximum achievable profit. Be sure to document the invariants of any loop(s)
-        //  you write. Your implementation should have worst-case runtime complexity O(N), where
-        //  N=prices.length, and worst-case space complexity O(1).
 
         BuySellTransaction best = new BuySellTransaction(0, 1);
         int minPrice = 0; //records index of lowest price seen so far
@@ -96,6 +91,48 @@ public class Trading {
         }
         return best;
 
+    }
+
+    public static void main(String[] args) {
+        int[][] stockArrays = new int[10][];
+        for (int i = 1; i <= 10; i++) {
+            stockArrays[i-1] = randomStockArray(100000 * i, 100);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            long startTime = System.nanoTime();
+            optimalTransaction2(stockArrays[i]);
+            long endTime = System.nanoTime();
+            long elapsedTime = (endTime-startTime)/1000000000;
+            System.out.println("optimalTransaction2 - Length: " + stockArrays[i].length + ". Runtime: " + elapsedTime + " seconds.");
+        }
+
+        for (int i = 0; i < 10; i++) {
+            long startTime = System.nanoTime();
+            optimalTransaction1(stockArrays[i]);
+            long endTime = System.nanoTime();
+            long elapsedTime = (endTime-startTime)/1000000000;
+            System.out.println("optimalTransaction1 - Length: " + stockArrays[i].length + ". Runtime: " + elapsedTime + " seconds.");
+        }
+
+
+    }
+
+    /*
+    Modifies array to mimics random stock price fluctuations based on given start price
+     */
+    static int[] randomStockArray(int size, int startPrice) {
+        assert (startPrice > 0);
+        assert (size > 0);
+        int[] arr = new int[size];
+        Random rand = new Random();
+        arr[0] = startPrice;
+        for (int i = 1; i < arr.length; i++) {
+            int randomValue = (int) (arr[i - 1] * (rand.nextDouble() * (0.1 + 0.08)
+                    - 0.08)); //randomValue = rand.nextDouble()×(max-min) + min
+            arr[i] = arr[i - 1] + randomValue;
+        }
+        return arr;
     }
 
 }
