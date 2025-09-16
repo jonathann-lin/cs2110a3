@@ -138,7 +138,7 @@ public class Trading {
         int S0 = size; // Inital stock price
         double mu = 0.05; // Assume a 5% annual drift
         double sigma = 0.20; // Assume 20% annual volatility
-        double T = 1.0; // Assume a time period of 1 year
+        int T = 1; // Assume a time period of 1 year
         int N = 252; // Number of trading days in a year
         double dt = T / N; //Time step for a GBM
         Random random = new Random(); // Random number generator
