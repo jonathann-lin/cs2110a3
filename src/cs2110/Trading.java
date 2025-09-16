@@ -78,6 +78,7 @@ public class Trading {
         BuySellTransaction best = new BuySellTransaction(0, 1);
         int minPrice = 0; //records index of lowest price seen so far
         //TODO do loop invariant
+        //Loop Invariant: best=max(profit(prices,k) for k < i))
         for (int i = 1; i < prices.length; i++) {
             BuySellTransaction test = new BuySellTransaction(minPrice, i);
             if (profit(prices, test) > profit(prices, best)) {
