@@ -133,7 +133,44 @@ public class Trading {
                     - 0.08)); //randomValue = rand.nextDouble()×(max-min) + min
             arr[i] = arr[i - 1] + randomValue;
         }
+
+        /*
+        // S0: initial stock price
+        int S0 = size;
+        // mu: drift (expected return)
+        double mu = 0.05; // 5% annual drift
+        // sigma: volatility
+        double sigma = 0.20; // 20% annual volatility
+        // T: time horizon in years
+        double T = 1.0; // 1 year
+        // N: number of time steps
+        int N = 252; // Number of trading days in a year
+
+        // --- Calculation Variables ---
+
+        // dt: time step
+        double dt = T / N;
+        // Array to store the price path
+        double[] path = new double[N + 1];
+        // Random number generator for the Wiener process
+        Random random = new Random();
+
+        // Set the starting price
+        path[0] = S0;
+
+        // --- GBM Simulation Loop ---
+        for (int i = 1; i <= N; i++) {
+            // Generate a standard normal random variable Z
+            double Z = random.nextGaussian();
+
+            // Calculate the next price using the GBM formula
+            // S_t = S_{t-1} * exp((mu - 0.5 * sigma^2) * dt + sigma * sqrt(dt) * Z)
+            arr[i] = (int) (arr[i - 1] * Math.exp((mu - 0.5 * sigma * sigma) * dt + sigma * Math.sqrt(dt) * Z));
+        }
+        */
+
         return arr;
+
     }
 
 }
