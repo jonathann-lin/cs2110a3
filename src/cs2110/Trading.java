@@ -97,7 +97,7 @@ public class Trading {
     public static void main(String[] args) {
         int[][] stockArrays = new int[10][];
         for (int i = 1; i <= 10; i++) {
-            stockArrays[i-1] = randomStockArray(100000 * i, 100);
+            stockArrays[i-1] = randomStockArray(100000 * i);
         }
 
         for (int i = 0; i < 10; i++) {
@@ -122,20 +122,9 @@ public class Trading {
     /*
     Modifies array to mimics random stock price fluctuations based on given start price
      */
-    static int[] randomStockArray(int size, int startPrice) {
+    static int[] randomStockArray(int startPrice) {
         assert (startPrice > 0);
-        assert (size > 0);
-        int[] arr = new int[size];
-        Random rand = new Random();
-        arr[0] = startPrice;
-        for (int i = 1; i < arr.length; i++) {
-            int randomValue = (int) (arr[i - 1] * (rand.nextDouble() * (0.1 + 0.08)
-                    - 0.08)); //randomValue = rand.nextDouble()×(max-min) + min
-            arr[i] = arr[i - 1] + randomValue;
-        }
 
-        /*
-        int S0 = size; // Inital stock price
         double mu = 0.05; // Assume a 5% annual drift
         double sigma = 0.20; // Assume 20% annual volatility
         int T = 1; // Assume a time period of 1 year
@@ -143,12 +132,14 @@ public class Trading {
         double dt = T / N; //Time step for a GBM
         Random random = new Random(); // Random number generator
 
-        for (int i = 1; i <= N; i++) {
+        int[] arr = new int[T*N];
+        arr[0]=startPrice;
+
+        for (int i = 1; i < N; i++) {
             double Z = random.nextGaussian(); //random variable generator
             //Use GBM formula:
             arr[i] = (int) (arr[i - 1] * Math.exp((mu - 0.5 * sigma * sigma) * dt + sigma * Math.sqrt(dt) * Z));
         }
-        */
 
         return arr;
 
