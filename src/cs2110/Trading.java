@@ -77,7 +77,6 @@ public class Trading {
 
         BuySellTransaction best = new BuySellTransaction(0, 1);
         int minPrice = 0; //records index of lowest price seen so far
-        //TODO do loop invariant
         //Loop Invariant: best=max(profit(prices,k) for k < i))
         for (int i = 1; i < prices.length; i++) {
             BuySellTransaction test = new BuySellTransaction(minPrice, i);
@@ -97,23 +96,27 @@ public class Trading {
     public static void main(String[] args) {
         int[][] stockArrays = new int[10][];
         for (int i = 1; i <= 10; i++) {
-            stockArrays[i-1] = randomStockArray(100000 * i);
+            stockArrays[i-1] = randomStockArray(100,100000 * i);
+        }
+        //Warm up and prevent overhead
+        for (int i = 0; i < 10; i++) {
+            optimalTransaction2(stockArrays[i]);
         }
 
         for (int i = 0; i < 10; i++) {
             long startTime = System.nanoTime();
             optimalTransaction2(stockArrays[i]);
             long endTime = System.nanoTime();
-            long elapsedTime = (endTime-startTime)/1000000000;
-            System.out.println("optimalTransaction2 - Length: " + stockArrays[i].length + ". Runtime: " + elapsedTime + " seconds.");
+            double elapsedTime = (endTime-startTime)/1e6;
+            System.out.println("optimalTransaction2 - Length: " + stockArrays[i].length + ". Runtime: " + elapsedTime + " milliseconds.");
         }
 
         for (int i = 0; i < 10; i++) {
             long startTime = System.nanoTime();
             optimalTransaction1(stockArrays[i]);
             long endTime = System.nanoTime();
-            long elapsedTime = (endTime-startTime)/1000000000;
-            System.out.println("optimalTransaction1 - Length: " + stockArrays[i].length + ". Runtime: " + elapsedTime + " seconds.");
+            long elapsedTime = (endTime-startTime)/1000000;
+            System.out.println("optimalTransaction1 - Length: " + stockArrays[i].length + ". Runtime: " + elapsedTime + " milliseconds.");
         }
 
 
@@ -122,20 +125,20 @@ public class Trading {
     /*
     Modifies array to mimics random stock price fluctuations based on given start price
      */
-    static int[] randomStockArray(int startPrice) {
+    static int[] randomStockArray(int startPrice, int size ) {
         assert (startPrice > 0);
 
         double mu = 0.05; // Assume a 5% annual drift
         double sigma = 0.20; // Assume 20% annual volatility
         int T = 1; // Assume a time period of 1 year
         int N = 252; // Number of trading days in a year
-        double dt = T / N; //Time step for a GBM
+        double dt = 1 / 252; //Time step for a GBM
         Random random = new Random(); // Random number generator
 
-        int[] arr = new int[T*N];
+        int[] arr = new int[size];
         arr[0]=startPrice;
 
-        for (int i = 1; i < N; i++) {
+        for (int i = 1; i < size; i++) {
             double Z = random.nextGaussian(); //random variable generator
             //Use GBM formula:
             arr[i] = (int) (arr[i - 1] * Math.exp((mu - 0.5 * sigma * sigma) * dt + sigma * Math.sqrt(dt) * Z));
