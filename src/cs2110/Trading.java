@@ -95,6 +95,10 @@ public class Trading {
 
     public static void main(String[] args) {
         int[][] stockArrays = new int[10][];
+        int[] test=randomStockArray(100,100);
+        for (int i =0; i < 100; i++){
+            System.out.println(test[i]);
+        }
         for (int i = 1; i <= 10; i++) {
             stockArrays[i-1] = randomStockArray(100,100000 * i);
         }
@@ -130,9 +134,7 @@ public class Trading {
 
         double mu = 0.05; // Assume a 5% annual drift
         double sigma = 0.20; // Assume 20% annual volatility
-        int T = 1; // Assume a time period of 1 year
-        int N = 252; // Number of trading days in a year
-        double dt = 1 / 252; //Time step for a GBM
+        double dt = 1.0 / 252; //Time step for a GBM
         Random random = new Random(); // Random number generator
 
         int[] arr = new int[size];
@@ -141,7 +143,7 @@ public class Trading {
         for (int i = 1; i < size; i++) {
             double Z = random.nextGaussian(); //random variable generator
             //Use GBM formula:
-            arr[i] = (int) (arr[i - 1] * Math.exp((mu - 0.5 * sigma * sigma) * dt + sigma * Math.sqrt(dt) * Z));
+            arr[i] = (int) (0.5+arr[i - 1] * Math.exp((mu - 0.5 * sigma * sigma) * dt + sigma * Math.sqrt(dt) * Z));
         }
 
         return arr;
