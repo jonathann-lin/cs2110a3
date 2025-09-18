@@ -95,10 +95,6 @@ public class Trading {
 
     public static void main(String[] args) {
         int[][] stockArrays = new int[10][];
-        int[] test=randomStockArray(100,100);
-        for (int i =0; i < 100; i++){
-            System.out.println(test[i]);
-        }
         for (int i = 1; i <= 10; i++) {
             stockArrays[i-1] = randomStockArray(100,100000 * i);
         }
